@@ -63,7 +63,7 @@ Re-saving the reward from Simple mode writes current syntax.
   failing — temporarily add `{"type": "logArgs"}` as the first condition to
   print every variable and check what `$reward_title` actually contains.
 
-**A condition file "worked in CCI docs" but crashes or never matches**
+**A condition file from another source crashes or never matches**
 Field names have **no underscores**: `type`, `source`, `target`. (Old
 underscore-style configs are tolerated, but mixed styles in one object are not
 worth the confusion — pick the plain style.)

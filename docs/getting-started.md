@@ -117,20 +117,19 @@ Edited tokens while the game is running? Run **`/creatorlink reconnect`**.
 | `/creatorlink reconnect` | Re-read the toml and restart all connections |
 | `/creatorlink reload` | Re-read the event configs in your profile |
 | `/creatorlink profile <name>` | Switch to a different profile folder |
-| `/creatorlink importcci [path]` | Import CCI configs: no path = from `config/contentcreatorintegration/`, or give a file/folder path |
+| `/creatorlink importcci [path]` | Import existing configs: no path = from `config/contentcreatorintegration/`, or give a file/folder path |
 
-## Migrating from CCI
+## Importing existing configs
 
-If `config/contentcreatorintegration/` exists (from a previous CCI install)
-and CreatorLink has never been configured, your first launch copies everything
-over automatically: tokens and settings from `contentcreatorintegration.toml`,
+If a `config/contentcreatorintegration/` folder exists and CreatorLink has
+never been configured, your first launch copies everything over automatically: tokens and settings from `contentcreatorintegration.toml`,
 plus every profile's JSON configs and notes. Check the log for
 `Migrated settings from contentcreatorintegration.toml`.
 
-Already ran CreatorLink, or got CCI configs from someone else? Two options,
-no conversion needed (the formats are identical):
+Already ran CreatorLink, or got configs from someone else? Two options,
+no conversion needed:
 
-- **Drag & drop** the `.json` files — or a whole CCI profile folder, the
+- **Drag & drop** the `.json` files — or a whole profile folder, the
   entire `contentcreatorintegration` folder, or a **.zip** of it — onto the
   CreatorLink editor or Simple screen. (`.rar` isn't supported — extract it
   first or re-pack as .zip.) Files go into your active profile (a full install imports
@@ -138,13 +137,13 @@ no conversion needed (the formats are identical):
   was imported. Files named anything (`my-rewards.json`) are stored under
   the socket their `type` field names, and renamed copies like
   `streamelements (1).json` snap back to the right socket automatically.
-  Old CCI files that use underscore-prefixed keys (`_configs`, `_outcomes`)
+  Old files that use underscore-prefixed keys (`_configs`, `_outcomes`)
   load fine too.
 - **`/creatorlink importcci`** re-runs the profile migration from
   `config/contentcreatorintegration/` at any time; add a path
-  (`/creatorlink importcci C:\backups\cci`) to import from anywhere else.
+  (`/creatorlink importcci C:\backups\configs`) to import from anywhere else.
 
-Both routes also merge tokens and API keys from the CCI toml: values you
+Both routes also merge tokens and API keys from the toml: values you
 don't already have are added (your existing tokens are never overwritten),
 and sockets restart automatically. You can also drop a
 `contentcreatorintegration.toml` on its own to import just the tokens.

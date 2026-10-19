@@ -7,7 +7,7 @@ How to verify every feature, mostly without needing live Twitch events.
 A ready-made `gamehooks.json` maps chat commands to every outcome type, so you
 can trigger anything by **typing in Minecraft chat**. It's already installed in
 the "26.2 test" profile (and lives in the repo at
-`reference/test-harness/gamehooks.json`).
+`docs/examples/gamehooks.json`).
 
 Setup: game hooks are **off by default** — enable them first via
 `/creatorlink settings` → `enableGameHooks` → `true` → *Save + Reconnect*

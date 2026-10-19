@@ -3,8 +3,7 @@
 Twitch and YouTube events → things happening in Minecraft. A viewer redeems
 channel points and a zombie in enchanted armor drops next to you; a raid
 spawns one mob per raider; a resub spawns one per month subscribed. If you
-used **CCI (Content Creator Integration)** before, CreatorLink is a drop-in
-replacement for Minecraft 26.2 — your old configs import as-is.
+have existing event configs in this JSON format, they import as-is.
 
 - **Minecraft:** 26.2 (Fabric)
 - **Requires:** Fabric Loader, Fabric API, Java 25
@@ -16,8 +15,8 @@ replacement for Minecraft 26.2 — your old configs import as-is.
 
 1. Drop `creatorlink-<version>.jar` and Fabric API into your `mods` folder.
 2. Launch once — it creates `config/creatorlink/creatorlink.toml`.
-3. If you had CCI installed, **everything migrates automatically on first
-   launch**: tokens, settings, and all your profiles. Skip to section 3.
+3. If you have an existing `config/contentcreatorintegration/` folder,
+   **everything imports automatically on first launch**: tokens, settings, and all your profiles. Skip to section 3.
 
 ## 2. Connect your stream
 
@@ -40,7 +39,7 @@ ERROR) with per-service **Connect / Disconnect / Reconnect** buttons.
 
 > **Note:** channel point redemptions only arrive via **Twitch EventSub** —
 > StreamElements/Streamlabs don't carry them (SE has its own
-> `channelPointsRedemption` events if your config came from CCI).
+> `channelPointsRedemption` events if your config was imported).
 
 ## 3. In-game commands
 
@@ -56,7 +55,7 @@ ERROR) with per-service **Connect / Disconnect / Reconnect** buttons.
 | `/creatorlink reconnect` | Re-read the toml and restart all connections |
 | `/creatorlink reload` | Re-read the event configs in your profile |
 | `/creatorlink profile <name>` | Switch profile folder |
-| `/creatorlink importcci [path]` | Import a CCI install (see section 5) |
+| `/creatorlink importcci [path]` | Import existing configs (see section 5) |
 | `/creatorlink whitelist <player>` | (Server) allow a streamer's command outcomes |
 
 ## 4. Simple mode — `/creatorlink simple`
@@ -78,7 +77,7 @@ pick an action:
 - **Chat message.**
 
 Plus an optional "announce in chat" line. Existing rewards are listed with
-Edit/Delete — including ones imported from CCI (StreamElements rewards are
+Edit/Delete — including imported ones (StreamElements rewards are
 tagged **[SE]**; anything Simple can't fully parse gets an *Editor* button
 that jumps to that exact event in the full editor).
 
@@ -94,18 +93,18 @@ where they make sense:
 **Chat display.** Twitch and YouTube chat as toasts, chat messages, both,
 or off — with **name color** and **message color** pickers per platform.
 
-## 5. Coming from CCI?
+## 5. Importing existing configs
 
-The config format is identical — no conversion, ever.
+No conversion needed.
 
-- **Same machine:** first launch migrates everything automatically.
-- **Any other time:** **drag & drop** your CCI `.json` files, a profile
+- **Same machine:** first launch imports everything automatically.
+- **Any other time:** **drag & drop** your `.json` files, a profile
   folder, the whole `contentcreatorintegration` folder, **or a .zip of it**
   onto the CreatorLink editor or Simple screen. Configs land in your active
   profile, tokens/API keys are merged in (your existing ones are never
   overwritten), and sockets restart. `.rar` isn't supported — extract it
   first. Renamed files like `streamelements (1).json` snap back to the
-  right socket automatically; old underscore-style CCI files load fine.
+  right socket automatically; old underscore-style files load fine.
 - Or run `/creatorlink importcci` (reads `config/contentcreatorintegration/`)
   — add a path to import from anywhere else.
 
@@ -118,7 +117,7 @@ from Simple mode regenerates it in current syntax.
 
 ## 6. Full editor — `/creatorlink editor`
 
-CCI-style power editing: tabs for every socket config (twitcheventsub,
+Power editing: tabs for every socket config (twitcheventsub,
 chat, streamelements, streamlabs, donationalerts, gamehooks — tabs exist
 even before the file does; Save creates it), navigator tree on the left,
 fields on the right.

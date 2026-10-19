@@ -3,7 +3,7 @@
 	"id": "creatorlink",
 	"version": "${version}",
 	"name": "CreatorLink",
-	"description": "Bridges stream events (Twitch, YouTube, Streamlabs, StreamElements, DonationAlerts) to in-game outcomes via JSON event configurations. An independent, open-source reimplementation of the Content Creator Integration config format for modern Minecraft. Not affiliated with iChun.",
+	"description": "Bridges stream events (Twitch, YouTube, Streamlabs, StreamElements, DonationAlerts) to in-game outcomes via JSON event configurations.",
 	"authors": [
 		"Limitless SMP"
 	],

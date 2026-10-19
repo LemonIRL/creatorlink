@@ -26,7 +26,7 @@ Edit them three ways:
   (Protection vs Blast Protection, Sharpness vs Smite) gray out just like at
   an anvil — toggle "turn off drops" and "no despawning" (persistence — the
   mob stays until killed), and it writes the config for you. Rewards
-  imported from CCI are listed too: StreamElements ones (tagged **[SE]**)
+  imported ones are listed too: StreamElements ones (tagged **[SE]**)
   are fully editable in the form, while events matching on something other
   than the reward title (e.g. reward id) are tagged §8(advanced)§r — their
   *Editor* button jumps straight to that exact event in the full editor. Editing loads the reward back into the
@@ -49,7 +49,7 @@ Edit them three ways:
   right. Tabs exist even when the file doesn't yet — open one, hit *+ Add
   Configuration*, and Save creates it. **Double-click** a `conditions` or
   `outcomes` node in the tree (or use its *+ Add…* button) to get the full
-  searchable list of every registered type, CCI-style
+  searchable list of every registered type
   ("chat — ChatOutcome", "note — NoteOutcome", ...). Closing with unsaved
   edits (including deletes) asks whether to save or discard, so the file —
   and the Simple screen — always match what you saw. *Save* applies immediately. (YouTube

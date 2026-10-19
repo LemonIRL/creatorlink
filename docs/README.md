@@ -15,10 +15,9 @@ Works on **Minecraft 26.2 with Fabric**. Free and open source (MIT).
 | [Troubleshooting](troubleshooting.md) | Nothing connecting? Events not firing? Start here |
 | [Testing Guide](testing-guide.md) | Verify every feature with the `!test` chat-command harness |
 
-## Coming from CCI?
+## Importing existing configs?
 
-CreatorLink reads the same config format as Content Creator Integration
-(1.16–1.21.5). If you have an existing CCI install, your settings, tokens,
-event configs, and notes are **migrated automatically** the first time you
+If you already have event configs in this JSON format, your settings, tokens,
+event configs, and notes can be **imported automatically** the first time you
 launch — nothing to convert. See the note at the bottom of
-[Getting Started](getting-started.md#migrating-from-cci).
+[Getting Started](getting-started.md#importing-existing-configs).
