@@ -4,7 +4,7 @@ Stream events → in-game outcomes for **Minecraft 26.2 (Fabric)**. Twitch chann
 point redemptions spawn mobs, subs trigger commands, chat pops toasts — all
 driven by JSON event configurations.
 
-CreatorLink is a **clean-room, MIT-licensed work-alike of Content Creator
+CreatorLink is an **independent, MIT-licensed reimplementation of Content Creator
 Integration (CCI)** by iChun, which is closed-source and was last released for
 1.21.5. It was built from CCI's MIT-licensed documentation and the public APIs
 of the streaming services — no CCI code was decompiled or copied. **Existing CCI

@@ -1,6 +1,6 @@
 # CreatorLink — Specification & Roadmap
 
-A clean-room, MIT-licensed Fabric mod for **Minecraft 26.2** that reimplements the
+An independent, MIT-licensed Fabric mod for **Minecraft 26.2** that reimplements the
 functionality and JSON config format of iChun's Content Creator Integration (CCI),
 which is closed-source/ARR and last released for 1.21.5 (v1.13.0).
 
