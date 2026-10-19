@@ -12,6 +12,7 @@ Works on **Minecraft 26.2 with Fabric**. Free and open source (MIT).
 | [Event Configs](event-configs.md) | The JSON files that decide *what happens* on each event |
 | [Recipes](recipes.md) | Copy-paste setups: channel point rewards, sub spawns, bits math |
 | [Server Setup](server-setup.md) | Running commands on a multiplayer server (whitelist) |
+| [Security](security.md) | Where your tokens live, how to share configs safely, importing from others |
 | [Troubleshooting](troubleshooting.md) | Nothing connecting? Events not firing? Start here |
 | [Testing Guide](testing-guide.md) | Verify every feature with the `!test` chat-command harness |
 

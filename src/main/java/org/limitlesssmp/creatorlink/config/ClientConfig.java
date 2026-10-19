@@ -107,6 +107,7 @@ public final class ClientConfig {
                 toml.set("socket.twitchChats", twitchChats);
                 toml.setComment("socket.eventsubOauthTokens", " Twitch OAuth token(s) for EventSub. Generate at https://twitchtokengenerator.com/quick/l7oG2vcNOE");
                 toml.set("socket.eventsubOauthTokens", eventsubOauthTokens);
+                toml.setComment("socket.eventsubRefreshTokens", " Used to renew the access token through twitchtokengenerator.com (the service that issued it). Treat all tokens in this file like passwords: never share this file.");
                 toml.set("socket.eventsubRefreshTokens", eventsubRefreshTokens);
                 toml.setComment("socket.eventsubClientIDs", " Leave empty to use twitchtokengenerator.com's Client ID.");
                 toml.set("socket.eventsubClientIDs", eventsubClientIDs);
@@ -117,9 +118,19 @@ public final class ClientConfig {
                 toml.set("socket.youtubeApiKeys", youtubeApiKeys);
                 toml.set("socket.youtubeChannelIds", youtubeChannelIds);
                 toml.save();
+                restrictToOwner(file);
             }
         } catch (Exception e) {
             EngineRuntime.LOGGER.error("Failed to save {}: {}", file, e.toString());
+        }
+    }
+
+    /** The file holds tokens: make it owner-only where the filesystem supports POSIX permissions. */
+    private static void restrictToOwner(Path file) {
+        try {
+            Files.setPosixFilePermissions(file, java.nio.file.attribute.PosixFilePermissions.fromString("rw-------"));
+        } catch (UnsupportedOperationException | java.io.IOException ignored) {
+            // non-POSIX filesystem (e.g. Windows): leave the default ACLs
         }
     }
 }

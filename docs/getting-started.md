@@ -143,9 +143,10 @@ no conversion needed:
   `config/contentcreatorintegration/` at any time; add a path
   (`/creatorlink importcci C:\backups\configs`) to import from anywhere else.
 
-Both routes also merge tokens and API keys from the toml: values you
-don't already have are added (your existing tokens are never overwritten),
-and sockets restart automatically. You can also drop a
+Both routes can also bring in tokens and API keys from a toml. CreatorLink
+**asks first** and shows how many it found; values you don't already have are
+added (your existing tokens are never overwritten) and sockets restart. See
+[Security](security.md). You can also drop a
 `contentcreatorintegration.toml` on its own to import just the tokens.
 
 Next: [Event Configs](event-configs.md) — making events actually *do* things.

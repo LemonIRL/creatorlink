@@ -191,27 +191,48 @@ public class CreatorLinkClient implements ClientModInitializer {
 	 * subfolders) — imports every profile. Reloads and toasts a summary.
 	 */
 	public static void importDropped(java.util.List<Path> dropped) {
-		int[] c = new int[5]; // configs, skipped, profiles, tokens, rar
-		importPaths(dropped, c);
+		int[] c = new int[5]; // configs, skipped, profiles, (unused), rar
+		java.util.List<ClientConfig> pendingTokens = new java.util.ArrayList<>();
+		importPaths(dropped, c, pendingTokens);
 		reloadActiveProfile();
 		StringBuilder msg = new StringBuilder();
 		if (c[2] > 0) msg.append(c[2]).append(" profile(s)");
 		if (c[0] > 0) msg.append(msg.length() > 0 ? ", " : "").append(c[0]).append(" config(s)");
-		if (c[3] > 0) msg.append(msg.length() > 0 ? ", " : "").append(c[3]).append(" token/setting(s)");
-		if (msg.length() == 0) msg.append("nothing imported");
+		if (msg.length() == 0) msg.append(pendingTokens.isEmpty() ? "nothing imported" : "no event configs");
 		else msg.insert(0, "Imported ");
 		if (c[4] > 0) msg.append(" — .rar isn't supported, extract it or use .zip");
 		else if (c[1] > 0) msg.append(" — ").append(c[1]).append(" file(s) skipped (not valid configs)");
 		RUNTIME.bridge().toast(3, "CreatorLink", msg.toString(), null, null);
+		confirmTokenImport(pendingTokens);
 	}
 
-	private static void importPaths(java.util.List<Path> paths, int[] c) {
+	/**
+	 * Tokens/API keys found in an imported config are never merged silently: a
+	 * config from someone else could add their stream account, whose events
+	 * would then trigger outcomes in this game. Ask first.
+	 */
+	private static void confirmTokenImport(java.util.List<ClientConfig> pending) {
+		if (pending.isEmpty()) return;
+		int total = 0;
+		for (ClientConfig other : pending) total += newValueCount(other);
+		final int count = total;
+		RUNTIME.bridge().prompt("The import contains " + count + " token/channel setting(s) not in your config.\n\n"
+				+ "Adding them lets that account's stream events trigger outcomes in your game. "
+				+ "Only continue if this config is your own or comes from someone you trust.",
+				"Add " + count, "Skip", () -> {
+					int added = 0;
+					for (ClientConfig other : pending) added += mergeSettings(other);
+					RUNTIME.bridge().toast(3, "CreatorLink", "Added " + added + " token/setting(s)", null, null);
+				}, () -> RUNTIME.bridge().toast(3, "CreatorLink", "Tokens skipped", null, null));
+	}
+
+	private static void importPaths(java.util.List<Path> paths, int[] c, java.util.List<ClientConfig> pendingTokens) {
 		for (Path p : paths) {
 			String lower = p.getFileName().toString().toLowerCase(java.util.Locale.ROOT);
 			if (Files.isDirectory(p)) {
 				if (Files.exists(p.resolve("contentcreatorintegration.toml")) || looksLikeInstall(p)) {
 					c[2] += profiles.importCciInstall(p);
-					c[3] += mergeSettings(p.resolve("contentcreatorintegration.toml"));
+					collectSettings(p.resolve("contentcreatorintegration.toml"), pendingTokens);
 					continue;
 				}
 				try (var files = Files.list(p)) {
@@ -226,26 +247,44 @@ public class CreatorLinkClient implements ClientModInitializer {
 				if (ProfileManager.importConfigFile(p, activeProfileDir()) != null) c[0]++;
 				else c[1]++;
 			} else if (lower.endsWith(".toml")) {
-				c[3] += mergeSettings(p);
+				collectSettings(p, pendingTokens);
 			} else if (lower.endsWith(".zip")) {
 				// creators usually share their whole CCI folder zipped
+				Path tmp = null;
 				try {
-					Path tmp = Files.createTempDirectory("creatorlink-import");
+					tmp = Files.createTempDirectory("creatorlink-import");
 					unzip(p, tmp);
 					java.util.List<Path> children;
 					try (var s = Files.list(tmp)) {
 						children = s.toList();
 					}
-					importPaths(children, c);
+					importPaths(children, c, pendingTokens);
 				} catch (Exception e) {
 					EngineRuntime.LOGGER.warn("Zip import failed for {}: {}", p, e.toString());
 					c[1]++;
+				} finally {
+					// the unzipped copy can hold tokens: don't leave it in the temp folder
+					if (tmp != null) deleteQuietly(tmp);
 				}
 			} else if (lower.endsWith(".rar")) {
 				c[4]++;
 			} else {
 				c[1]++;
 			}
+		}
+	}
+
+	private static void deleteQuietly(Path dir) {
+		try (var walk = Files.walk(dir)) {
+			for (Path f : walk.sorted(java.util.Comparator.reverseOrder()).toList()) {
+				try {
+					Files.deleteIfExists(f);
+				} catch (java.io.IOException ignored) {
+					// best effort
+				}
+			}
+		} catch (java.io.IOException ignored) {
+			// best effort
 		}
 	}
 
@@ -273,9 +312,7 @@ public class CreatorLinkClient implements ClientModInitializer {
 	 * empty — existing working tokens are never overwritten. Restarts sockets
 	 * when anything was added. Returns how many values were merged.
 	 */
-	public static int mergeSettings(Path toml) {
-		if (!Files.exists(toml)) return 0;
-		ClientConfig other = ClientConfig.load(toml);
+	public static int mergeSettings(ClientConfig other) {
 		int added = 0;
 		added += mergeList(config.twitchChats, other.twitchChats);
 		added += mergeList(config.eventsubOauthTokens, other.eventsubOauthTokens);
@@ -296,6 +333,37 @@ public class CreatorLinkClient implements ClientModInitializer {
 			sockets.start(config, configFile);
 		}
 		return added;
+	}
+
+	/** Loads a toml for import and queues it if it has anything new; nothing is merged here. */
+	private static void collectSettings(Path toml, java.util.List<ClientConfig> pending) {
+		if (!Files.exists(toml)) return;
+		ClientConfig other = ClientConfig.load(toml);
+		if (newValueCount(other) > 0) pending.add(other);
+	}
+
+	/** How many values mergeSettings would add, without changing anything. */
+	private static int newValueCount(ClientConfig other) {
+		int n = 0;
+		n += missing(config.twitchChats, other.twitchChats);
+		n += missing(config.eventsubOauthTokens, other.eventsubOauthTokens);
+		n += missing(config.eventsubRefreshTokens, other.eventsubRefreshTokens);
+		n += missing(config.eventsubClientIDs, other.eventsubClientIDs);
+		n += missing(config.streamlabsTokens, other.streamlabsTokens);
+		n += missing(config.streamElementsTokens, other.streamElementsTokens);
+		n += missing(config.donationAlertsTokens, other.donationAlertsTokens);
+		n += missing(config.youtubeApiKeys, other.youtubeApiKeys);
+		n += missing(config.youtubeChannelIds, other.youtubeChannelIds);
+		if (config.streamerName.isEmpty() && !other.streamerName.isEmpty()) n++;
+		return n;
+	}
+
+	private static int missing(java.util.List<String> mine, java.util.List<String> theirs) {
+		int n = 0;
+		for (String s : theirs) {
+			if (s != null && !s.isEmpty() && !mine.contains(s)) n++;
+		}
+		return n;
 	}
 
 	private static int mergeList(java.util.List<String> mine, java.util.List<String> theirs) {
@@ -402,14 +470,12 @@ public class CreatorLinkClient implements ClientModInitializer {
 						.then(ClientCommands.literal("importcci")
 								.executes(ctx -> {
 									Path cci = configFile.getParent().getParent().resolve("contentcreatorintegration");
-									int n = profiles.importCciInstall(cci);
-									int tokens = mergeSettings(cci.resolve("contentcreatorintegration.toml"));
-									loadProfile(activeProfile);
-									ctx.getSource().sendFeedback(Component.literal(n > 0 || tokens > 0
-											? "§6[CreatorLink]§r imported " + n + " CCI profile(s), "
-											+ tokens + " token/setting(s) from " + cci
-											: "§6[CreatorLink]§r no CCI install found at " + cci
-											+ " §7— or drag config files onto any CreatorLink screen"));
+									if (!Files.isDirectory(cci)) {
+										ctx.getSource().sendFeedback(Component.literal("§6[CreatorLink]§r no install found at " + cci
+												+ " §7— or drag config files onto any CreatorLink screen"));
+										return Command.SINGLE_SUCCESS;
+									}
+									importDropped(java.util.List.of(cci));
 									return Command.SINGLE_SUCCESS;
 								})
 								.then(ClientCommands.argument("path", StringArgumentType.greedyString()).executes(ctx -> {

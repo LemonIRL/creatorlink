@@ -59,7 +59,7 @@ Any other time, **drag & drop** `.json` config files (or a whole profile
 folder, or a `.zip` of it) onto the CreatorLink editor or Simple screen to
 import them into the active profile. Tokens/API keys from a toml are merged in
 too (never overwriting yours). `/creatorlink importcci [path]` does the same
-from a command.
+from a command. Tokens found in an import are only added after you confirm.
 
 Notes:
 - Condition/outcome fields use `type` / `source` / `target` (no leading
