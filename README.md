@@ -124,6 +124,12 @@ types `joinWorld`, `leaveWorld`, `death`, `respawn`, `attackBlock` (vars:
 
 Requires JDK 25. `gradlew build` — the jar lands in `build/libs/`.
 
+## Acknowledgements
+
+CreatorLink was inspired by Content Creator Integration by iChun, and can
+import its configs. It is an independent project and is not affiliated with
+or endorsed by iChun.
+
 ## License
 
 MIT, see [LICENSE](LICENSE). Not affiliated with Twitch, YouTube,
