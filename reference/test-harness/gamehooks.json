@@ -1,0 +1,314 @@
+{
+  "configs": [
+    {
+      "types": {
+        "joinWorld": [
+          {
+            "conditions": [],
+            "outcomes": [
+              { "title": "CreatorLink", "subtitle": "gamehooks active — type !test help", "type": "toast" }
+            ],
+            "allowsOtherEventsToTrigger": true
+          }
+        ],
+        "death": [
+          {
+            "conditions": [],
+            "outcomes": [
+              { "message": "§c[gamehooks] you died!", "type": "chat" }
+            ],
+            "allowsOtherEventsToTrigger": true
+          }
+        ],
+        "respawn": [
+          {
+            "conditions": [],
+            "outcomes": [
+              { "message": "§a[gamehooks] respawned", "type": "chat" }
+            ],
+            "allowsOtherEventsToTrigger": true
+          }
+        ],
+        "attackBlock": [
+          {
+            "conditions": [],
+            "outcomes": [
+              { "message": "[gamehooks] punched $block at $x $y $z", "type": "chat", "inActionBar": true }
+            ],
+            "cooldown": "40",
+            "disableShortCircuitWhenOnCooldown": true,
+            "allowsOtherEventsToTrigger": true
+          }
+        ],
+        "chatSent": [
+          {
+            "name": "help",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test help" } ],
+            "outcomes": [
+              { "message": "§6!test§r toast · chat · actionbar · sound · narrator · popup · prompt · input · note · readnote · math · random · heal · hurt · feed · launch · mount · give · zoom · sneak · freespace · query · state · delay · feedback · feedback2 · fakecrash", "type": "chat" }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "toast",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test toast" } ],
+            "outcomes": [
+              { "toastType": 2, "title": "§bIt works!", "subtitle": "sent by $playerName", "type": "toast", "titleColor": "#55FFFF" }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "chat",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test chat" } ],
+            "outcomes": [
+              { "message": "§a[test] client-side chat line, streamer = $streamer, mc = $mcVersion", "type": "chat" }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "actionbar",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test actionbar" } ],
+            "outcomes": [
+              { "message": "§e[test] action bar message", "type": "chat", "inActionBar": true }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "sound",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test sound" } ],
+            "outcomes": [
+              { "type": "sound", "clientSide": true, "sound": "minecraft:entity.player.levelup", "volume": 1.0, "pitch": 1.2 }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "narrator",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test narrator" } ],
+            "outcomes": [
+              { "type": "narrator", "message": "Creator Link narrator test successful", "interrupts": true }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "popup",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test popup" } ],
+            "outcomes": [
+              { "type": "popup", "text": "This is a popup. Hitting OK triggers a toast.",
+                "postOkOutcome": { "title": "Popup", "subtitle": "OK pressed", "type": "toast" } }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "prompt",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test prompt" } ],
+            "outcomes": [
+              { "type": "prompt", "text": "Pineapple on pizza?", "yesOverride": "Obviously", "noOverride": "Never",
+                "yesOutcome": { "message": "§a[test] you said YES", "type": "chat" },
+                "noOutcome": { "message": "§c[test] you said NO", "type": "chat" } }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "input",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test input" } ],
+            "outcomes": [
+              { "type": "input", "text": "Type anything:", "defaultInput": "hello", "variableInput": "typed",
+                "postInputOutcome": { "title": "Input", "subtitle": "you typed: $typed", "type": "toast" } }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "note",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test note" } ],
+            "outcomes": [
+              { "type": "note", "noteName": "testNote", "noteContent": "saved at day $playerName", "expiresIn": "1h" },
+              { "message": "[test] note saved (expires in 1h) — try !test readnote", "type": "chat" }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "readnote",
+            "conditions": [
+              { "type": "stringEquals", "source": "$message", "target": "!test readnote" },
+              { "type": "note", "noteName": "testNote", "variableName": "noteVal",
+                "defaultVariableValue": "(no note saved)", "meetConditionIfNoteDoesNotExist": true }
+            ],
+            "outcomes": [
+              { "message": "[test] note contents: $noteVal", "type": "chat" }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "math",
+            "conditions": [
+              { "type": "stringEquals", "source": "$message", "target": "!test math" },
+              { "type": "math", "calc": "/", "value1": "350", "value2": "100", "variableName": "raw" },
+              { "type": "math", "calc": "floor", "value1": "$raw", "value2": "0", "variableName": "spawns" }
+            ],
+            "outcomes": [
+              { "type": "repeat", "times": "$spawns",
+                "outcome": { "message": "[test] repeat iteration $iteCount (350/100 floored = $spawns)", "type": "chat" } }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "random",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test random" } ],
+            "outcomes": [
+              { "message": "§a[test] common (weight 6)", "type": "chat", "weight": 6 },
+              { "message": "§e[test] uncommon (weight 3)", "type": "chat", "weight": 3 },
+              { "message": "§d[test] rare (weight 1)", "type": "chat", "weight": 1 }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "heal",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test heal" } ],
+            "outcomes": [ { "type": "health", "target": "@s", "amount": "6" } ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "hurt",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test hurt" } ],
+            "outcomes": [ { "type": "health", "target": "@s", "amount": "-4" } ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "feed",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test feed" } ],
+            "outcomes": [ { "type": "food", "target": "@s", "level": "20", "saturation": "10" } ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "launch",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test launch" } ],
+            "outcomes": [ { "type": "motion", "amount": "1.2", "axis": "y", "relative": true, "doOnPlayer": true } ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "mount",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test mount" } ],
+            "outcomes": [
+              { "type": "command", "command": "/summon minecraft:pig ~2 ~ ~", "executeAsSelf": true },
+              { "type": "mount", "riderTarget": "@s", "riddenTarget": "@e[type=pig,limit=1,sort=nearest]", "force": true }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "give",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test give" } ],
+            "outcomes": [ { "type": "inventory", "target": "@s", "funcType": "add", "index": "-1", "additionalArgs": "minecraft:diamond 3" } ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "zoom",
+            "conditions": [
+              { "type": "stringEquals", "source": "$message", "target": "!test zoom" },
+              { "type": "gameSettings", "key": "fov", "value": "30.0", "inverseMatch": true }
+            ],
+            "outcomes": [
+              { "type": "gameSettings", "key": "fov", "value": "30.0" },
+              { "message": "[test] FOV set to 30 — run !test unzoom to restore", "type": "chat" }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "unzoom",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test unzoom" } ],
+            "outcomes": [ { "type": "gameSettings", "key": "fov", "value": "70.0" } ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "sneak",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test sneak" } ],
+            "outcomes": [
+              { "type": "keyPress", "keyName": "key.sneak", "pressed": true },
+              { "message": "[test] holding sneak for 3s...", "type": "chat" },
+              { "type": "event", "events": [ {
+                  "conditions": [],
+                  "outcomes": [ { "type": "keyPress", "keyName": "key.sneak" } ],
+                  "delay": "60"
+              } ] }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "freespace",
+            "conditions": [
+              { "type": "stringEquals", "source": "$message", "target": "!test freespace" },
+              { "type": "freeSpace", "target": "@s", "horiRadius": "6", "vertRadius": "3", "tries": "16",
+                "variableName": "safePos", "requireSolidBlock": true }
+            ],
+            "outcomes": [
+              { "type": "command", "command": "/summon minecraft:sheep $safePos", "executeAsSelf": true },
+              { "message": "[test] sheep summoned at safe spot: $safePos", "type": "chat" }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "query",
+            "conditions": [
+              { "type": "stringEquals", "source": "$message", "target": "!test query" },
+              { "type": "target", "target": "@s", "argument": "health", "variableName": "hp" },
+              { "type": "target", "target": "@s", "argument": "biome", "variableName": "biome" },
+              { "type": "target", "target": "@s", "argument": "day", "variableName": "day" }
+            ],
+            "outcomes": [
+              { "message": "[test] hp=$hp biome=$biome day=$day", "type": "chat" }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "state",
+            "conditions": [
+              { "type": "stringEquals", "source": "$message", "target": "!test state" },
+              { "type": "playerState", "state": "sneaking" }
+            ],
+            "outcomes": [ { "message": "§a[test] you ARE sneaking", "type": "chat" } ],
+            "allowsOtherEventsToTrigger": true
+          },
+          {
+            "name": "state-not",
+            "conditions": [
+              { "type": "stringEquals", "source": "$message", "target": "!test state" },
+              { "type": "playerState", "state": "sneaking", "inverseMatch": true }
+            ],
+            "outcomes": [ { "message": "§7[test] you are NOT sneaking (crouch and retry)", "type": "chat" } ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "delay",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test delay" } ],
+            "outcomes": [ { "message": "[test] this arrived 3 seconds late", "type": "chat" } ],
+            "delay": "60",
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "feedback",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test feedback" } ],
+            "outcomes": [
+              { "type": "command", "command": "/time query daytime", "executeAsSelf": true,
+                "handleFeedback": "timeResult", "feedbackKeys": ["commands.time.query"] },
+              { "message": "[test] feedback armed — now run !test feedback2", "type": "chat" }
+            ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "feedback2",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test feedback2" } ],
+            "outcomes": [ { "message": "[test] captured feedback was: $timeResult", "type": "chat" } ],
+            "allowsOtherEventsToTrigger": false
+          },
+          {
+            "name": "fakecrash",
+            "conditions": [ { "type": "stringEquals", "source": "$message", "target": "!test fakecrash" } ],
+            "outcomes": [ { "type": "fakeCrash", "crashType": "1", "crashDuration": "60" } ],
+            "allowsOtherEventsToTrigger": false
+          }
+        ]
+      }
+    }
+  ],
+  "init": [],
+  "type": "gamehooks"
+}

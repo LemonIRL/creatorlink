@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "creatorlink",
+	"version": "${version}",
+	"name": "CreatorLink",
+	"description": "Bridges stream events (Twitch, YouTube, Streamlabs, StreamElements, DonationAlerts) to in-game outcomes via JSON event configurations. A clean-room, open-source work-alike of the Content Creator Integration config format for modern Minecraft.",
+	"authors": [
+		"Limitless SMP"
+	],
+	"contact": {},
+	"license": "MIT",
+	"icon": "assets/creatorlink/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"org.limitlesssmp.creatorlink.CreatorLink"
+		],
+		"client": [
+			"org.limitlesssmp.creatorlink.client.CreatorLinkClient"
+		]
+	},
+	"mixins": [
+		"creatorlink.mixins.json",
+		{
+			"config": "creatorlink.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
